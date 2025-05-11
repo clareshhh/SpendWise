@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpendWise - Authentication</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      background: linear-gradient(135deg, #e3f0ff 0%, #3787e0 100%);
+      font-family: 'Poppins', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-container {
+      background: #fff;
+      padding: 32px 28px 18px 28px;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(55, 135, 224, 0.13);
+      width: 100%;
+      max-width: 360px;
+      margin: 24px;
+      position: relative;
+    }
+    .auth-container h2 {
+      text-align: center;
+      color: #2266b4;
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .auth-container label {
+      display: block;
+      margin-bottom: 6px;
+      color: #1a3557;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    .auth-container input[type="text"],
+    .auth-container input[type="email"],
+    .auth-container input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border: 1.5px solid #b4d5f7;
+      border-radius: 6px;
+      font-size: 15px;
+      background: #f5faff;
+      transition: border 0.2s;
+    }
+    .auth-container input[type="text"]:focus,
+    .auth-container input[type="email"]:focus,
+    .auth-container input[type="password"]:focus {
+      border-color: #3787e0;
+      outline: none;
+    }
+    .auth-container .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .auth-container .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+    }
+    .auth-container .form-link {
+      color: #3787e0;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .auth-container .form-link:hover {
+      color: #1a3557;
+      text-decoration: underline;
+    }
+    .auth-container button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(90deg, #3787e0 0%, #2266b4 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(55,135,224,0.10);
+    }
+    .auth-container button:hover {
+      background: linear-gradient(90deg, #2266b4 0%, #3787e0 100%);
+    }
+    .auth-container .footer-text {
+      text-align: center;
+      font-size: 14px;
+      color: #1a3557;
+      margin-top: 8px;
+    }
+    .auth-container .footer-text a {
+      color: #3787e0;
+      text-decoration: none;
+      margin-left: 2px;
+      transition: color 0.2s;
+    }
+    .auth-container .footer-text a:hover {
+      color: #1a3557;
+      text-decoration: underline;
+    }
+    /* Hide all forms by default */
+    .auth-form { display: none; }
+    /* Show only the active form */
+    .auth-form.active { display: block; }
+    @media (max-width: 500px) {
+      .auth-container { padding: 18px 6px 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul style="list-style: none; text-align: center; padding: 0;">
+          {% for category, message in messages %}
+            {% set color = 'red' if category == 'error' else 'green' if category == 'success' else 'blue' %}
+            <li style="color: {{ color }};">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Login Form -->
+    <form class="auth-form active" id="loginForm" method="POST" action="/login">
+      <h2>Login</h2>
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" name="email" placeholder="you@email.com" required>
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="password" placeholder="Password" required>
+      <div class="form-actions">
+        <div class="checkbox-group">
+          <input type="checkbox" id="stay-logged-in" name="stayLoggedIn">
+          <label for="stay-logged-in" style="margin-bottom:0;">Stay logged in</label>
+        </div>
+        <a href="#" class="form-link" onclick="showForm('forgotForm');return false;">Forgot Password?</a>
+      </div>
+      <button type="submit">Login</button>
+      <div class="footer-text">
+        Don't have an account?
+        <a href="#" onclick="showForm('signupForm');return false;">Sign Up</a>
+      </div>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form class="auth-form" id="signupForm" method="POST" action="/signup">
+      <h2>Sign Up</h2>
+      <label for="signup-name">Name</label>
+      <input type="text" id="signup-name" name="name" placeholder="Your Name" required>
+      <label for="signup-email">Email</label>
+      <input type="email" id="signup-email" name="email" placeholder="you@email.com" required>
+      <label for="signup-password">Password</label>
+      <input type="password" id="signup-password" name="password" placeholder="Password" required>
+      <label for="signup-confirm">Confirm Password</label>
+      <input type="password" id="signup-confirm" name="confirm" placeholder="Confirm Password" required>
+      <button type="submit">Create Account</button>
+      <div class="footer-text">
+        Already have an account?
+        <a href="#" onclick="showForm('loginForm');return false;">Login</a>
+      </div>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form class="auth-form" id="forgotForm" method="POST" action="/forgot">
+      <h2>Forgot Password</h2>
+      <label for="forgot-email">Email</label>
+      <input type="email" id="forgot-email" name="email" placeholder="you@email.com" required>
+      <button type="submit">Send Recovery Link</button>
+      <div class="footer-text">
+        <a href="#" onclick="showForm('loginForm');return false;">Back to Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Simple form switching logic
+    function showForm(formId) {
+      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+      document.getElementById(formId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
