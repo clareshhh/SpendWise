@@ -1,9 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
-import os
 
-app = Flask(__name__)
+app = Flask(__name__, instance_path=os.getcwd())
 app.secret_key = 'your_secret_key'
 
 DB_FILE = 'users.db'
@@ -88,7 +88,8 @@ def forgot_password():
 @app.route('/dashboard')
 def dashboard():
     if 'user' in session:
-        return f"<h1>Welcome, {session['user']}!</h1><br><a href='/logout'>Logout</a>"
+        #return f"<h1>Welcome, {session['user']}!</h1><br><a href='/logout'>Logout</a>"
+        return render_template('menu.html', username=session['user'])  # Pass username
     return redirect(url_for('index'))
 
 @app.route('/logout')
