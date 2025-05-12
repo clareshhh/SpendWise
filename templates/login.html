@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    /* General Body Styles */
     body {
       background: linear-gradient(135deg, #e3f0ff 0%, #3787e0 100%);
       font-family: 'Poppins', Arial, sans-serif;
@@ -13,7 +15,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0; /* Reset default body margin */
     }
+
+    /* Authentication Container Styles */
     .auth-container {
       background: #fff;
       padding: 32px 28px 18px 28px;
@@ -24,6 +29,8 @@
       margin: 24px;
       position: relative;
     }
+
+    /* Heading Styles */
     .auth-container h2 {
       text-align: center;
       color: #2266b4;
@@ -31,6 +38,8 @@
       font-weight: 600;
       letter-spacing: 1px;
     }
+
+    /* Label Styles */
     .auth-container label {
       display: block;
       margin-bottom: 6px;
@@ -38,6 +47,8 @@
       font-weight: 500;
       font-size: 15px;
     }
+
+    /* Input Styles */
     .auth-container input[type="text"],
     .auth-container input[type="email"],
     .auth-container input[type="password"] {
@@ -50,34 +61,45 @@
       background: #f5faff;
       transition: border 0.2s;
     }
+
+    /* Input Focus Styles */
     .auth-container input[type="text"]:focus,
     .auth-container input[type="email"]:focus,
     .auth-container input[type="password"]:focus {
       border-color: #3787e0;
       outline: none;
     }
+
+    /* Form Actions Styles */
     .auth-container .form-actions {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
     }
+
+    /* Checkbox Group Styles */
     .auth-container .checkbox-group {
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 14px;
     }
+
+    /* Form Link Styles */
     .auth-container .form-link {
       color: #3787e0;
       text-decoration: none;
       font-size: 14px;
       transition: color 0.2s;
     }
+
     .auth-container .form-link:hover {
       color: #1a3557;
       text-decoration: underline;
     }
+
+    /* Button Styles */
     .auth-container button {
       width: 100%;
       padding: 10px;
@@ -91,36 +113,53 @@
       margin-top: 6px;
       margin-bottom: 10px;
       transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(55,135,224,0.10);
+      box-shadow: 0 2px 8px rgba(55, 135, 224, 0.10);
     }
+
     .auth-container button:hover {
       background: linear-gradient(90deg, #2266b4 0%, #3787e0 100%);
     }
+
+    /* Footer Text Styles */
     .auth-container .footer-text {
       text-align: center;
       font-size: 14px;
       color: #1a3557;
       margin-top: 8px;
     }
+
     .auth-container .footer-text a {
       color: #3787e0;
       text-decoration: none;
       margin-left: 2px;
       transition: color 0.2s;
     }
+
     .auth-container .footer-text a:hover {
       color: #1a3557;
       text-decoration: underline;
     }
+
     /* Hide all forms by default */
-    .auth-form { display: none; }
+    .auth-form {
+      display: none;
+    }
+
     /* Show only the active form */
-    .auth-form.active { display: block; }
+    .auth-form.active {
+      display: block;
+    }
+
+    /* Media Queries for Responsiveness */
     @media (max-width: 500px) {
-      .auth-container { padding: 18px 6px 8px 6px; }
+      .auth-container {
+        padding: 18px 6px 8px 6px;
+        margin: 12px; /* Reduced margin for smaller screens */
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="auth-container">
     <!-- Flash messages -->
@@ -130,7 +169,26 @@
           {% for category, message in messages %}
             {% set color = 'red' if category == 'error' else 'green' if category == 'success' else 'blue' %}
             <li style="color: {{ color }};">
-              {{ message }}
+              {% if category == 'info' and message == 'You have been logged out.' %}
+                {{ message }}
+              {% elif category == 'success' %}
+                Login successful!
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul style="list-style: none; text-align: center; padding: 0;">
+          {% for category, message in messages %}
+            {% set color = 'red' if category == 'error' else 'green' if category == 'success' else 'blue' %}
+            <li style="color: {{ color }};">
+              {% if category == 'info' and message == 'You have been logged out.' %}
+                {{ message }}
+              {% endif %}
             </li>
           {% endfor %}
         </ul>
@@ -149,12 +207,12 @@
           <input type="checkbox" id="stay-logged-in" name="stayLoggedIn">
           <label for="stay-logged-in" style="margin-bottom:0;">Stay logged in</label>
         </div>
-        <a href="#" class="form-link" onclick="showForm('forgotForm');return false;">Forgot Password?</a>
+        <a href="#" class="form-link" onclick="showForm('forgotForm'); return false;">Forgot Password?</a>
       </div>
       <button type="submit">Login</button>
       <div class="footer-text">
         Don't have an account?
-        <a href="#" onclick="showForm('signupForm');return false;">Sign Up</a>
+        <a href="#" onclick="showForm('signupForm'); return false;">Sign Up</a>
       </div>
     </form>
 
@@ -172,7 +230,7 @@
       <button type="submit">Create Account</button>
       <div class="footer-text">
         Already have an account?
-        <a href="#" onclick="showForm('loginForm');return false;">Login</a>
+        <a href="#" onclick="showForm('loginForm'); return false;">Login</a>
       </div>
     </form>
 
@@ -183,13 +241,12 @@
       <input type="email" id="forgot-email" name="email" placeholder="you@email.com" required>
       <button type="submit">Send Recovery Link</button>
       <div class="footer-text">
-        <a href="#" onclick="showForm('loginForm');return false;">Back to Login</a>
+        <a href="#" onclick="showForm('loginForm'); return false;">Back to Login</a>
       </div>
     </form>
   </div>
 
   <script>
-    // Simple form switching logic
     function showForm(formId) {
       document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
       document.getElementById(formId).classList.add('active');
