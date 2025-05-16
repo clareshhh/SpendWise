@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpendWise Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      margin: 0;
+      background: #e3f0ff;
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #1a3557;
+    }
+    .app-header {
+      background: #2266b4;
+      color: #fff;
+      padding: 24px 20px 18px 20px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 2px 12px rgba(34,102,180,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .app-header .greeting {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .app-header .profile {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2266b4;
+      font-size: 1.1rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(34,102,180,0.13);
+    }
+    .summary-card {
+      margin: 20px auto 18px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(55,135,224,0.09);
+      max-width: 360px;
+      padding: 30px 0 18px 0;
+      text-align: center;
+      position: relative;
+    }
+    .progress-ring {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 8px auto;
+      background: conic-gradient(#3787e0 0% 45%, #b4d5f7 45% 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .progress-inner {
+      background: #fff;
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 50%; top: 50%; transform: translate(-50%,-50%);
+      box-shadow: 0 2px 8px rgba(55,135,224,0.07);
+    }
+    .progress-inner strong {
+      font-size: 1.2rem;
+      color: #2266b4;
+    }
+    .progress-inner span {
+      font-size: 0.9rem;
+      color: #3787e0;
+    }
+    .summary-card .subtext {
+      color: #888;
+      font-size: 0.98rem;
+      margin-top: 6px;
+    }
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 16px 0 10px 0;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .quick-btn {
+      background: #3787e0;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 0.98rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.18s;
+      min-width: 120px;
+    }
+    .quick-btn:hover {
+      background: #2266b4;
+    }
+    .expenses-section {
+      max-width: 420px;
+      margin: 0 auto 80px auto;
+      padding: 0 6px;
+    }
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-bar select, .filter-bar input[type="date"] {
+      padding: 4px 8px;
+      border-radius: 5px;
+      border: 1px solid #b4d5f7;
+      background: #f5faff;
+      font-size: 0.97rem;
+    }
+    .expenses-list {
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .expense-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(55,135,224,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      border-left: 4px solid #3787e0;
+    }
+    .expense-card:hover {
+      box-shadow: 0 4px 16px rgba(55,135,224,0.15);
+    }
+    .expense-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .expense-icon {
+      font-size: 1.4rem;
+      width: 32px;
+      text-align: center;
+    }
+    .expense-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .expense-category {
+      font-weight: 600;
+      color: #2266b4;
+      font-size: 1rem;
+    }
+    .expense-note {
+      color: #666;
+      font-size: 0.92rem;
+    }
+    .expense-meta {
+      text-align: right;
+    }
+    .expense-date {
+      color: #888;
+      font-size: 0.92rem;
+    }
+    .expense-amount {
+      color: #3787e0;
+      font-weight: 700;
+      font-size: 1.08rem;
+    }
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 74px;
+      right: 28px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3787e0 0%, #2266b4 100%);
+      color: #fff;
+      font-size: 2.2rem;
+      border: none;
+      box-shadow: 0 4px 16px rgba(55,135,224,0.25);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.18s;
+    }
+    .fab:hover {
+      background: #2266b4;
+    }
+    /* Add/Edit Expense Modal */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(34,102,180,0.17);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 340px;
+      width: 95vw;
+      padding: 26px 18px 18px 18px;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(34,102,180,0.18);
+      animation: fadein 0.2s;
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: #2266b4;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .close-modal {
+      position: absolute;
+      top: 12px; right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: #888;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #2266b4;
+      font-weight: 500;
+      font-size: 0.98rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #b4d5f7;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #f5faff;
+      margin-bottom: 2px;
+    }
+    textarea { resize: vertical; }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+    .btn-primary {
+      background: #3787e0;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 18px;
+      transition: background 0.18s;
+    }
+    .btn-primary:hover {
+      background: #2266b4;
+    }
+    .btn-danger {
+      background: #e03b3b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 18px;
+      transition: background 0.18s;
+    }
+    .btn-danger:hover {
+      background: #b41d1d;
+    }
+    .form-error {
+      color: #e03b3b;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    /* Tabs for summary */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #b4d5f7;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      color: #2266b4;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      border-bottom: 2px solid transparent;
+      transition: border 0.18s, background 0.18s;
+    }
+    .tab.active {
+      border-bottom: 2.5px solid #3787e0;
+      background: #e3f0ff;
+    }
+    /* Chart/List Toggle */
+    .toggle-view {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      justify-content: flex-end;
+    }
+    .toggle-btn {
+      background: #3787e0;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.97rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 14px;
+      transition: background 0.18s;
+    }
+    .toggle-btn.active, .toggle-btn:hover {
+      background: #2266b4;
+    }
+    /* Summary/Breakdown */
+    .summary-section, .breakdown-section {
+      max-width: 420px;
+      margin: 0 auto 80px auto;
+      padding: 0 6px;
+    }
+    .summary-stats {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(55,135,224,0.07);
+      padding: 18px 14px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .summary-stats strong {
+      color: #2266b4;
+      font-size: 1.1rem;
+    }
+    .chart-img {
+      width: 100%;
+      max-width: 340px;
+      display: block;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(55,135,224,0.07);
+    }
+    /* Budget Setting */
+    .budget-section {
+      max-width: 420px;
+      margin: 0 auto 80px auto;
+      padding: 0 6px;
+    }
+    .budget-bars {
+      margin-top: 18px;
+    }
+    .budget-bar {
+      margin-bottom: 10px;
+    }
+    .budget-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.96rem;
+      color: #2266b4;
+    }
+    .budget-bar-outer {
+      height: 14px;
+      background: #e3f0ff;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .budget-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, #3787e0 0%, #2266b4 100%);
+      border-radius: 8px;
+      transition: width 0.3s;
+    }
+    .budget-alert {
+      background: #e03b3b;
+      color: #fff;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 14px 0 0 0;
+      text-align: center;
+      font-size: 0.97rem;
+    }
+    .btn-danger {
+    background: #e03b3b;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    }
+    .btn-danger:hover {
+    background: #b41d1d;
+    }
+    /* Bottom Tab Bar */
+    .tabbar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: #fff;
+      box-shadow: 0 -2px 12px rgba(55,135,224,0.08);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 60px;
+      z-index: 100;
+    }
+    .tabbar-btn {
+      background: none;
+      border: none;
+      color: #2266b4;
+      font-size: 1.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.18s;
+    }
+    .tabbar-btn.active, .tabbar-btn:hover {
+      color: #3787e0;
+    }
+    .tabbar-btn span {
+      font-size: 0.8rem;
+      margin-top: -2px;
+    }
+    @media (max-width: 600px) {
+      .summary-card, .summary-section, .breakdown-section, .budget-section, .expenses-section { max-width: 100vw; }
+      .progress-ring { width: 90px; height: 90px; }
+      .progress-inner { width: 68px; height: 68px; }
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="greeting">Good Morning, <span id="userName">Alex</span></div>
+    <div class="profile">A</div>
+  </div>
+
+  <!-- SUMMARY CARD -->
+  <div class="summary-card" id="home-summary">
+    <div class="progress-ring">
+      <div class="progress-inner">
+        <strong id="total-spent">₱0</strong>
+        <span>of ₱10,000 used</span>
+      </div>
+    </div>
+    <div class="subtext">23 days left</div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions" id="quick-actions">
+    <button class="quick-btn" onclick="openAddExpense()">➕ Add Expense</button>
+    <button class="quick-btn" onclick="switchTab('summary')">📊 View Summary</button>
+    <button class="quick-btn" onclick="switchTab('budget')">💰 Set Budget</button>
+    <button class="quick-btn" onclick="switchTab('breakdown')">📈 Breakdown</button>
+  </div>
+
+  <!-- EXPENSES SECTION -->
+  <div class="expenses-section" id="home-expenses">
+    <div class="expenses-list" id="expenses-list"></div>
+  </div>
+
+  <!-- ADD MODAL -->
+  <div class="modal-bg" id="expense-modal-bg">
+    <form class="modal" id="expense-form" onsubmit="return saveExpense();">
+      <button class="close-modal" type="button" onclick="closeExpenseModal()">×</button>
+      <h3 id="expense-modal-title">Add Expense</h3>
+      <div class="form-group">
+        <label for="expense-amount">Amount</label>
+        <input type="number" id="expense-amount" required>
+      </div>
+      <div class="form-group">
+        <label for="expense-category">Category</label>
+        <select id="expense-category" required>
+          <option value="">Select</option>
+          <option>Food</option>
+          <option>Transport</option>
+          <option>Bills</option>
+          <option>Shopping</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="expense-date">Date</label>
+        <input type="date" id="expense-date" required>
+      </div>
+      <div class="form-group">
+        <label for="expense-note">Note</label>
+        <textarea id="expense-note"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    function openAddExpense() {
+      document.getElementById('expense-form').reset();
+      document.getElementById('expense-modal-bg').classList.add('active');
+    }
+
+    function closeExpenseModal() {
+      document.getElementById('expense-modal-bg').classList.remove('active');
+    }
+
+    function switchTab(tab) {
+      alert('Switched to ' + tab + ' (Demo only)');
+    }
+
+    function saveExpense() {
+      const amount = document.getElementById('expense-amount').value;
+      const category = document.getElementById('expense-category').value;
+      const date = document.getElementById('expense-date').value;
+      const note = document.getElementById('expense-note').value;
+
+      const data = { amount, category, date, note };
+
+      fetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(() => {
+        closeExpenseModal();
+        loadExpenses();
+      })
+      .catch(err => console.error('Error:', err));
+
+      return false;
+    }
+    function deleteExpense(id) {
+  if (confirm('Delete this expense?')) {
+    fetch(`/api/expenses/${id}`, {
+      method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(result => {
+      alert(result.message);
+      loadExpenses(); // refresh after delete
+    })
+    .catch(err => {
+      console.error('Delete error:', err);
+      alert('Failed to delete.');
+    });
+  }
+}
+
+    function loadExpenses() {
+  fetch('/api/expenses')
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById('expenses-list');
+      const totalDisplay = document.getElementById('total-spent');
+      list.innerHTML = '';
+
+      let total = 0;
+
+      data.forEach(exp => {
+        total += parseFloat(exp.amount);
+
+        const card = document.createElement('div');
+        card.className = 'expense-card';
+        card.innerHTML = `
+          <div class="expense-info">
+            <div class="expense-category">${exp.category}</div>
+            <div class="expense-note">${exp.note || ''}</div>
+          </div>
+          <div class="expense-meta">
+            <div class="expense-date">${exp.date}</div>
+            <div class="expense-amount">₱${exp.amount}</div>
+            <button class="btn-danger" style="margin-top: 4px;" onclick="deleteExpense(${exp.id})">🗑️</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      totalDisplay.innerText = `₱${total.toLocaleString()}`;
+    });
+}
+
+    window.addEventListener('DOMContentLoaded', loadExpenses);
+  </script>
+</body>
+</html>
+
