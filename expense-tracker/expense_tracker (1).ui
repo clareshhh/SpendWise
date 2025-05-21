@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ExpenseTracker</class>
+ <widget class="QWidget" name="ExpenseTracker">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Expense Tracker</string>
+  </property>
+  <layout class="QHBoxLayout" name="mainLayout">
+   <item>
+    <widget class="QGroupBox" name="addExpenseBox">
+     <property name="title">
+      <string>Add New Expense</string>
+     </property>
+     <layout class="QVBoxLayout" name="addExpenseLayout">
+      <item><widget class="QDoubleSpinBox" name="amountSpin"><property name="prefix"><string>₱</string></property></widget></item>
+      <item><widget class="QComboBox" name="categoryCombo">
+        <item><property name="text"><string>Food</string></property></item>
+        <item><property name="text"><string>Transportation</string></property></item>
+      </widget></item>
+      <item><widget class="QDateEdit" name="dateEdit"><property name="calendarPopup"><bool>true</bool></property></widget></item>
+      <item><widget class="QTextEdit" name="descriptionEdit"/></item>
+      <item><widget class="QPushButton" name="addButton"><property name="text"><string>Add Expense</string></property></widget></item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="summaryLayout">
+     <item>
+      <widget class="QGroupBox" name="summaryBox">
+       <property name="title">
+        <string>Expense Summary</string>
+       </property>
+       <layout class="QVBoxLayout" name="summaryVBox"/>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="historyBox">
+       <property name="title">
+        <string>Expense History</string>
+       </property>
+       <layout class="QVBoxLayout" name="historyVBox"/>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

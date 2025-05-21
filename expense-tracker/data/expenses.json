@@ -1,0 +1,26 @@
+[
+  {
+    "id": "fe466fb7-b8fa-4913-be82-cd78be2aafdb",
+    "amount": 10.0,
+    "category": "Food",
+    "date": "2025-05-20",
+    "description": "Siomai",
+    "created_at": "2025-05-20T21:33:43.281323"
+  },
+  {
+    "id": "22fe8369-dd1d-4ac3-b809-323fcbbea555",
+    "amount": 10.0,
+    "category": "Transportation",
+    "date": "2025-05-20",
+    "description": "June",
+    "created_at": "2025-05-20T21:34:19.876338"
+  },
+  {
+    "id": "30d0fc62-d048-48ee-928c-db6920750ffd",
+    "amount": 10.0,
+    "category": "Food",
+    "date": "2025-06-20",
+    "description": "This is siomai but june",
+    "created_at": "2025-05-20T21:34:36.947524"
+  }
+]
